@@ -20,43 +20,38 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the inputs
         $request->validate([
             'name' => 'required|unique:categories',
-            'slug' => 'nullable|unique:categories', // Add validation for the slug
+            'slug' => 'nullable|unique:categories',
         ]);
 
-        // If slug is not provided, generate it from the name
         $slug = $request->slug ?: \Str::slug($request->name);
 
         Category::create([
             'name' => $request->name,
-            'slug' => $slug, // Store the slug
+            'slug' => $slug, 
         ]);
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
-    
+
     public function edit(Category $category)
     {
-        // Pass the category data to the edit view
         return view('admin.categories.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)
     {
-        // Validate the inputs
         $request->validate([
             'name' => 'required|unique:categories,name,' . $category->id,
-            'slug' => 'nullable|unique:categories,slug,' . $category->id, // Update validation for slug
+            'slug' => 'nullable|unique:categories,slug,' . $category->id, 
         ]);
 
-        // If slug is not provided, generate it from the name
         $slug = $request->slug ?: \Str::slug($request->name);
 
         $category->update([
             'name' => $request->name,
-            'slug' => $slug, // Update the slug
+            'slug' => $slug, 
         ]);
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
